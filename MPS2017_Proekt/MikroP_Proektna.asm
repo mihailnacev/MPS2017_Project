@@ -1,5 +1,8 @@
 data segment
-  registracija db 12 dup ('a')
+  registracija db 120 dup(?)
+  tekovnaR db 12 dup(?)
+  tekovnaA dw 0
+  brojacR dw 0
 ends
 
 stack segment
@@ -12,8 +15,11 @@ mov ax,data
 mov es,ax 
 mov ds,ax
 
+mov tekovnaA, OFFSET registracija 
 include 'emu8086.inc'   
-printn "Vnesete komanda (ADD,ERASE,FIND)"     
+printn "Vnesete komanda (ADD,ERASE,FIND)"
+
+glaven:     
 
     prvaADD:
     mov ah,01h
@@ -126,7 +132,7 @@ vnesR:
 ;jne find
 ;cmp ch,1d 
 ;jne find
-mov si,OFFSET registracija
+lea si,tekovnaR
 mov cl,12
 ciklus:
 cmp cl,0d
@@ -142,7 +148,7 @@ find:
 
 proverkaPrviTri:
 
-mov si, OFFSET registracija
+mov si, OFFSET tekovnaR
 cmp [si],48d
 jl gresenFormat
 cmp [si], 57d
@@ -188,7 +194,7 @@ jl gresenFormat
 cmp [si], 57d
 jg gresenFormat
 inc si
-cmp [si], 45d
+cmp [si], 45d    ;proverka za crta
 jne gresenFormat
 inc si
 cmp [si], 48d
@@ -208,13 +214,54 @@ je proverkaRegVoMem
               
   
 greska:
-
+printn ""
+printn "Ne postoi takva operacija"
+jmp glaven
     ; add your code here
     
 proverkaRegVoMem:
+mov dx,brojacR
+dec dx
+
+povtoruvanjeProverka:
+cmp dx,-1d
+je krajProverka
+mov al,12
+mul dl
+lea si, tekovnaR
+lea di, registracija
+add di, ax
+
+MOV CX, 12 
+REPE CMPSB 
+JB prodolziProverka
+JA prodolziProverka
+;ako veke e dodadena registracija vo nizata
+jmp neDodavam
+prodolziProverka:
+dec dx
+jmp povtoruvanjeProverka
+
+krajProverka:
+inc brojacR
+mov cx,12
+lea si,tekovnaR
+mov di,tekovnaA
+
+kopiranje:
+movsb
+loop kopiranje
+
+add tekovnaA,12
+
+neDodavam:
+printn ""
+jmp glaven
 
 gresenFormat:
+printn ""
 printn "Gresen format"
+jmp glaven
                                          
 kraj:
 mov ax, 4c00h
