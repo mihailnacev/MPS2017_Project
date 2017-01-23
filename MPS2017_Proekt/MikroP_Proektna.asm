@@ -3,6 +3,8 @@ data segment
   tekovnaR db 12 dup(?)
   tekovnaA dw 0
   brojacR dw 0
+  komanda dw ?
+  pomosnaR db 12 dup(?) 
 ends
 
 stack segment
@@ -107,6 +109,7 @@ vnesSpace1:
    int 21h
    cmp al,' '
    ;mov ch,0  ; nula za ADD
+   mov komanda,0
    je vnesR
    jne greska
    
@@ -115,6 +118,7 @@ vnesSpace2:
    int 21h
    cmp al,' '
    ;mov ch,1  ; eden za ERASE
+   mov komanda,1
    je vnesR
    jne greska
    
@@ -123,6 +127,7 @@ vnesSpace3:
    int 21h
    cmp al,' '
    ;mov ch,2  ; dva za FIND
+   mov komanda,2
    je vnesR
    jne greska
         
@@ -144,7 +149,6 @@ inc si
 dec cl
 jmp ciklus
 
-find:
 
 proverkaPrviTri:
 
@@ -209,7 +213,13 @@ jg gresenFormat
 inc si
 cmp [si], 36d
 jne gresenFormat
+;je proverkaRegVoMem
+cmp komanda,0
 je proverkaRegVoMem
+cmp komanda,1
+je erase
+cmp komanda,2
+je find
               
               
   
@@ -217,7 +227,7 @@ greska:
 printn ""
 printn "Ne postoi takva operacija"
 jmp glaven
-    ; add your code here
+;add your code here
     
 proverkaRegVoMem:
 mov dx,brojacR
@@ -255,6 +265,48 @@ loop kopiranje
 add tekovnaA,12
 
 neDodavam:
+printn ""
+jmp glaven
+
+find:
+jmp glaven
+
+erase:
+mov DX,brojacR
+mov BX,0
+delba_registracii:
+lea DI,pomosnaR
+lea SI,registracija
+add SI,BX
+cmp DX,0
+je krajErase
+
+mov CX,12
+storiranje:
+movsb
+loop storiranje
+
+lea SI,tekovnaR
+lea DI,pomosnaR
+MOV CX, 12 
+REPE CMPSB 
+JB prodolziP
+JA prodolziP
+;ako veke e najdena registracijata koja treba da se brise
+lea DI,registracija
+add DI,BX
+mov CX,12
+mov al,0
+polnenjeNuli:
+stosb
+loop polnenjeNuli
+jmp krajErase
+prodolziP:
+dec DX
+add BX,12
+jmp delba_registracii
+
+krajErase:
 printn ""
 jmp glaven
 
