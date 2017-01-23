@@ -4,7 +4,9 @@ data segment
   tekovnaA dw 0
   brojacR dw 0
   komanda dw ?
-  pomosnaR db 12 dup(?) 
+  pomosnaR db 12 dup(?)
+  tempBrojac dw 0
+  fiksna db 12d
 ends
 
 stack segment
@@ -242,12 +244,12 @@ lea si, tekovnaR
 lea di, registracija
 add di, ax
 
-MOV CX, 12 
+MOV CX, 6 
 REPE CMPSB 
 JB prodolziProverka
 JA prodolziProverka
 ;ako veke e dodadena registracija vo nizata
-jmp neDodavam
+jmp prebrisi
 prodolziProverka:
 dec dx
 jmp povtoruvanjeProverka
@@ -263,8 +265,12 @@ movsb
 loop kopiranje
 
 add tekovnaA,12
+printn ""
+jmp glaven
+prebrisi:
+mov cx,6
+repe movsb
 
-neDodavam:
 printn ""
 jmp glaven
 
@@ -282,9 +288,9 @@ cmp DX,0
 je krajErase
 
 mov CX,12
-storiranje:
+zacuvuvanjeVoPomR:
 movsb
-loop storiranje
+loop zacuvuvanjeVoPomR
 
 lea SI,tekovnaR
 lea DI,pomosnaR
@@ -294,17 +300,52 @@ JB prodolziP
 JA prodolziP
 ;ako veke e najdena registracijata koja treba da se brise
 lea DI,registracija
-add DI,BX
-mov CX,12
-mov al,0
+add DI,BX ;pocetok na dupkata vo memorija
+;mov CX,12
+;mov al,0
+lea SI,registracija
+add SI,BX
+add SI,12d
+mov AX,brojacR
+mul fiksna
+add BX,12d
+sub AX,BX
+cmp AX,0d
+je da
+mov CX,AX
+jmp k
+da:
+mov cx,12d
+k:
+shiftanjePrazno:
+movsb
+loop shiftanjePrazno
+
+skok:
+mov AX,brojacR
+dec AX
+mul fiksna
+
+lea DI,registracija
+add DI,AX
+mov CX,12d
+
+mov AX,0
 polnenjeNuli:
 stosb
 loop polnenjeNuli
+dec brojacR
+sub tekovnaA,12d
 jmp krajErase
+;polnenjeNuli:
+;stosb  
+;loop polnenjeNuli
+;jmp krajErase
 prodolziP:
 dec DX
 add BX,12
 jmp delba_registracii
+
 
 krajErase:
 printn ""
