@@ -7,6 +7,14 @@ data segment
   pomosnaR db 12 dup(?)
   tempBrojac dw 0
   fiksna db 12d
+  fiksna1 db 10d
+  tekovnaD db 6 dup(?)
+  
+  pomMesecB dw 0
+  pomGodinaB dw 0
+  pomMesecV dw 0
+  pomGodinaV dw 0
+  flagGod db 0
 ends
 
 stack segment
@@ -130,9 +138,195 @@ vnesSpace3:
    cmp al,' '
    ;mov ch,2  ; dva za FIND
    mov komanda,2
-   je vnesR
-   jne greska
-        
+   je skratenFormat
+   jne greska        
+
+skratenFormat:
+
+lea DI,tekovnaD
+mesec:
+mov ah,1
+int 21h
+cmp al,48d
+jb greska
+cmp al,49d
+jg greska
+stosb
+
+mov ah,1
+int 21h
+cmp al,48d
+jb greska
+cmp al,57d
+jg greska
+stosb
+
+crta:
+mov ah,1
+int 21h
+cmp al,'-'
+jne greska
+stosb
+
+godina:
+mov ah,1
+int 21h
+cmp al,48d
+jb greska
+cmp al,57d
+jg greska
+stosb
+
+mov ah,1
+int 21h
+cmp al,48d
+jb greska
+cmp al,57d
+jg greska
+stosb
+
+terminator:
+mov ah,1
+int 21h
+cmp al,'$'
+jne greska
+stosb
+printn ""
+mov BP,brojacR
+mov BX,0
+delba_registracii2:
+lea DI,pomosnaR
+lea SI,registracija
+add SI,BX
+cmp BP,0
+je krajDelba
+
+mov CX,12
+zacuvuvanjeVoPomR2:
+movsb
+loop zacuvuvanjeVoPomR2
+
+lea SI,pomosnaR
+add SI,5d
+mov AX,0
+mov AX,[SI]
+mov al,ah
+mov ah,0
+sub ax,48d
+mul fiksna1
+inc SI
+mov pomMesecB,ax
+ 
+mov AX,0
+mov AX,[SI]
+mov al,ah
+mov ah,0
+sub AX,48d
+
+add pomMesecB,ax
+
+;dobro e
+inc SI
+inc SI
+
+mov AX,0
+mov AX,[SI]
+mov al,ah
+mov ah,0
+sub AX,48d
+mul fiksna1
+inc SI
+mov pomGodinaB,ax
+
+mov AX,0
+mov AX,[SI]
+mov al,ah
+mov ah,0
+sub AX,48d
+
+add pomGodinaB,ax
+;dobro e2
+
+lea SI,tekovnaD
+mov AX,0
+mov AX,[SI]
+;mov al,ah
+mov ah,0
+sub AX,48d
+mul fiksna1
+inc SI
+mov pomMesecV,ax
+
+mov AX,0
+mov AX,[SI]
+;mov al,ah
+mov ah,0
+sub AX,48d
+
+add pomMesecV,ax
+
+inc SI
+inc SI
+
+mov AX,0
+mov AX,[SI]
+;mov al,ah
+mov ah,0
+sub AX,48d
+mul fiksna1
+inc SI
+mov pomGodinaV,ax
+
+mov AX,0
+mov AX,[SI]
+;mov al,ah
+mov ah,0
+sub AX,48d
+
+add pomGodinaV,ax
+
+
+;FINITO
+mov flagGod,0d
+mov ax,0
+mov ax,pomGodinaV
+cmp AX,pomGodinaB
+je vtoraProverka
+dec ax
+cmp ax,pomGodinaB
+mov flagGod,1d
+je vtoraProverka
+jmp skokDruga
+
+vtoraProverka:
+cmp flagGod,0d
+je istaGod
+
+razlicnaGodina:
+mov ax,0
+mov ax,pomMesecV
+cmp ax,pomMesecB
+jle istaGod
+jmp skokDruga
+
+istaGod:
+lea DX,pomosnaR
+mov ah,9d
+int 21h
+printn ""
+
+skokDruga:
+add BX,12d
+dec BP
+jmp delba_registracii2
+
+
+
+krajDelba:
+
+printn ""  
+jmp glaven
+
 vnesR:
 
 ;cmp ch,0d
@@ -192,7 +386,7 @@ inc si
 proverkaData:
 cmp [si], 48d
 jl gresenFormat
-cmp [si], 57d
+cmp [si], 49d
 jg gresenFormat
 inc si         
 cmp [si], 48d
