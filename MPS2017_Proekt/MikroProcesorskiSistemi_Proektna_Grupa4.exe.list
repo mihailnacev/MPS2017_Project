@@ -1,0 +1,676 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+MikroProcesorskiSistemi_Proektna_Grupa4.exe -- emu8086 assembler version: 4.08  
+ 
+[ 25.01.2017  --  23:56:46 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       data segment
+[   2]    0000: 00 00 00 00 00 00 00 00 00 00 00 00   registracija db 120 dup(?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                                                    
+[   3]    0078: 00 00 00 00 00 00 00 00 00 00 00 00   tekovnaR db 12 dup(?)
+                                                    
+[   4]    0084: 00 00                                 tekovnaA dw 0
+[   5]    0086: 00 00                                 brojacR dw 0
+[   6]    0088: 00 00                                 komanda dw ?
+[   7]    008A: 00 00 00 00 00 00 00 00 00 00 00 00   pomosnaR db 12 dup(?)
+                                                    
+[   8]    0096: 00 00                                 tempBrojac dw 0
+[   9]    0098: 0C                                    fiksna db 12d
+[  10]    0099: 0A                                    fiksna1 db 10d
+[  11]    009A: 00 00 00 00 00 00                     tekovnaD db 6 dup(?)
+[  12]        :                                       
+[  13]    00A0: 00 00                                 pomMesecB dw 0
+[  14]    00A2: 00 00                                 pomGodinaB dw 0
+[  15]    00A4: 00 00                                 pomMesecV dw 0
+[  16]    00A6: 00 00                                 pomGodinaV dw 0
+[  17]    00A8: 00                                    flagGod db 0
+[  18]        :                                       ends
+[  19]        :                                       
+[  20]        :                                       stack segment
+[  21]    00B0: 00 00 00 00 00 00 00 00 00 00 00 00   dw   128  dup(0)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00                         
+[  22]        :                                       ends
+[  23]        :                                       
+[  24]        :                                       code segment
+[  25]    01B0:                                       start:
+[  26]    01B0: B8 00 00                              mov ax,data
+[  27]    01B3: 8E C0                                 mov es,ax
+[  28]    01B5: 8E D8                                 mov ds,ax
+[  29]        :                                       
+[  30]    01B7: C7 06 84 00 00 00                     mov tekovnaA, OFFSET registracija
+[  31]        :                                       include 'emu8086.inc'
+[  32]    01BD: 50 56 EB 23 56 6E 65 73 65 74 65 20   printn "Vnesete komanda (ADD,ERASE,FIND)"
+                6B 6F 6D 61 6E 64 61 20 28 41 44 44 
+                2C 45 52 41 53 45 2C 46 49 4E 44 29 
+                0D 0A 00 BE 11 00 2E 8A 04 3C 00 74 
+                07 46 B4 0E CD 10 EB F2 5E 58       
+[  33]        :                                       
+[  34]    01F7:                                       glaven:
+[  35]        :                                       
+[  36]    01F7:                                       prvaADD:
+[  37]    01F7: B4 01                                 mov ah,01h
+[  38]    01F9: CD 21                                 int 21h
+[  39]    01FB: 3C 41                                 cmp al,'A'
+[  40]    01FD: 74 02                                 je vtoraADD
+[  41]    01FF: 75 1A                                 jne ostanato
+[  42]        :                                       
+[  43]    0201:                                       vtoraADD:
+[  44]    0201: B4 01                                 mov ah,01h
+[  45]    0203: CD 21                                 int 21h
+[  46]    0205: 3C 44                                 cmp al,'D'
+[  47]    0207: 74 05                                 je tretaADD
+[  48]    0209: 74 03 E9 48 03                        jne greska
+[  49]        :                                       
+[  50]    020E:                                       tretaADD:
+[  51]    020E: B4 01                                 mov ah,1
+[  52]    0210: CD 21                                 int 21h
+[  53]    0212: 3C 44                                 cmp al,'D'
+[  54]    0214: 74 6F                                 je vnesSpace1
+[  55]    0216: 74 03 E9 3B 03                        jne greska
+[  56]        :                                       
+[  57]    021B:                                       ostanato:
+[  58]    021B: 3C 45                                 cmp al,'E'
+[  59]    021D: 74 02                                 je vtoraERASE
+[  60]    021F: 75 34                                 jne ostanato2
+[  61]        :                                       
+[  62]    0221:                                       vtoraERASE:
+[  63]    0221: B4 01                                 mov ah,1
+[  64]    0223: CD 21                                 int 21h
+[  65]    0225: 3C 52                                 cmp al,'R'
+[  66]    0227: 74 05                                 je tretaERASE
+[  67]    0229: 74 03 E9 28 03                        jne greska
+[  68]        :                                       
+[  69]    022E:                                       tretaERASE:
+[  70]    022E: B4 01                                 mov ah,1
+[  71]    0230: CD 21                                 int 21h
+[  72]    0232: 3C 41                                 cmp al,'A'
+[  73]    0234: 74 05                                 je cetvrtaERASE
+[  74]    0236: 74 03 E9 1B 03                        jne greska
+[  75]        :                                       
+[  76]    023B:                                       cetvrtaERASE:
+[  77]    023B: B4 01                                 mov ah,1
+[  78]    023D: CD 21                                 int 21h
+[  79]    023F: 3C 53                                 cmp al,'S'
+[  80]    0241: 74 05                                 je pettaERASE
+[  81]    0243: 74 03 E9 0E 03                        jne greska
+[  82]        :                                       
+[  83]    0248:                                       pettaERASE:
+[  84]    0248: B4 01                                 mov ah,1
+[  85]    024A: CD 21                                 int 21h
+[  86]    024C: 3C 45                                 cmp al,'E'
+[  87]    024E: 74 4B                                 je vnesSpace2
+[  88]    0250: 74 03 E9 01 03                        jne greska
+[  89]        :                                       
+[  90]    0255:                                       ostanato2:
+[  91]        :                                       
+[  92]    0255: 3C 46                                 cmp al,'F'
+[  93]    0257: 74 05                                 je vtoraFIND
+[  94]    0259: 74 03 E9 F8 02                        jne greska
+[  95]        :                                       
+[  96]    025E:                                       vtoraFIND:
+[  97]    025E: B4 01                                 mov ah,1
+[  98]    0260: CD 21                                 int 21h
+[  99]    0262: 3C 49                                 cmp al,'I'
+[ 100]    0264: 74 05                                 je tretaFIND
+[ 101]    0266: 74 03 E9 EB 02                        jne greska
+[ 102]        :                                       
+[ 103]    026B:                                       tretaFIND:
+[ 104]    026B: B4 01                                 mov ah,1
+[ 105]    026D: CD 21                                 int 21h
+[ 106]    026F: 3C 4E                                 cmp al,'N'
+[ 107]    0271: 74 05                                 je cetvrtaFIND
+[ 108]    0273: 74 03 E9 DE 02                        jne greska
+[ 109]        :                                       
+[ 110]    0278:                                       cetvrtaFIND:
+[ 111]    0278: B4 01                                 mov ah,1
+[ 112]    027A: CD 21                                 int 21h
+[ 113]    027C: 3C 44                                 cmp al,'D'
+[ 114]    027E: 74 31                                 je vnesSpace3
+[ 115]    0280: 74 03 E9 D1 02                        jne greska
+[ 116]        :                                       
+[ 117]    0285:                                       vnesSpace1:
+[ 118]    0285: B4 01                                 mov ah,1
+[ 119]    0287: CD 21                                 int 21h
+[ 120]    0289: 3C 20                                 cmp al,' '
+[ 121]        :                                       ;mov ch,0  ; nula za ADD
+[ 122]    028B: C7 06 88 00 00 00                     mov komanda,0
+[ 123]    0291: 75 03 E9 DA 01                        je vnesR
+[ 124]    0296: 74 03 E9 BB 02                        jne greska
+[ 125]        :                                       
+[ 126]    029B:                                       vnesSpace2:
+[ 127]    029B: B4 01                                 mov ah,1
+[ 128]    029D: CD 21                                 int 21h
+[ 129]    029F: 3C 20                                 cmp al,' '
+[ 130]        :                                       ;mov ch,1  ; eden za ERASE
+[ 131]    02A1: C7 06 88 00 01 00                     mov komanda,1
+[ 132]    02A7: 75 03 E9 C4 01                        je vnesR
+[ 133]    02AC: 74 03 E9 A5 02                        jne greska
+[ 134]        :                                       
+[ 135]    02B1:                                       vnesSpace3:
+[ 136]    02B1: B4 01                                 mov ah,1
+[ 137]    02B3: CD 21                                 int 21h
+[ 138]    02B5: 3C 20                                 cmp al,' '
+[ 139]        :                                       ;mov ch,2  ; dva za FIND
+[ 140]    02B7: C7 06 88 00 02 00                     mov komanda,2
+[ 141]    02BD: 74 05                                 je skratenFormat
+[ 142]    02BF: 74 03 E9 92 02                        jne greska
+[ 143]        :                                       
+[ 144]    02C4:                                       skratenFormat:
+[ 145]        :                                       
+[ 146]    02C4: BF 9A 00                              lea DI,tekovnaD
+[ 147]    02C7:                                       mesec:
+[ 148]    02C7: B4 01                                 mov ah,1
+[ 149]    02C9: CD 21                                 int 21h
+[ 150]    02CB: 3C 30                                 cmp al,48d
+[ 151]    02CD: 73 03 E9 84 02                        jb greska
+[ 152]    02D2: 3C 31                                 cmp al,49d
+[ 153]    02D4: 7E 03 E9 7D 02                        jg greska
+[ 154]    02D9: AA                                    stosb
+[ 155]        :                                       
+[ 156]    02DA: B4 01                                 mov ah,1
+[ 157]    02DC: CD 21                                 int 21h
+[ 158]    02DE: 3C 30                                 cmp al,48d
+[ 159]    02E0: 73 03 E9 71 02                        jb greska
+[ 160]    02E5: 3C 39                                 cmp al,57d
+[ 161]    02E7: 7E 03 E9 6A 02                        jg greska
+[ 162]    02EC: AA                                    stosb
+[ 163]        :                                       
+[ 164]    02ED:                                       crta:
+[ 165]    02ED: B4 01                                 mov ah,1
+[ 166]    02EF: CD 21                                 int 21h
+[ 167]    02F1: 3C 2D                                 cmp al,'-'
+[ 168]    02F3: 74 03 E9 5E 02                        jne greska
+[ 169]    02F8: AA                                    stosb
+[ 170]        :                                       
+[ 171]    02F9:                                       godina:
+[ 172]    02F9: B4 01                                 mov ah,1
+[ 173]    02FB: CD 21                                 int 21h
+[ 174]    02FD: 3C 30                                 cmp al,48d
+[ 175]    02FF: 73 03 E9 52 02                        jb greska
+[ 176]    0304: 3C 39                                 cmp al,57d
+[ 177]    0306: 7E 03 E9 4B 02                        jg greska
+[ 178]    030B: AA                                    stosb
+[ 179]        :                                       
+[ 180]    030C: B4 01                                 mov ah,1
+[ 181]    030E: CD 21                                 int 21h
+[ 182]    0310: 3C 30                                 cmp al,48d
+[ 183]    0312: 73 03 E9 3F 02                        jb greska
+[ 184]    0317: 3C 39                                 cmp al,57d
+[ 185]    0319: 7E 03 E9 38 02                        jg greska
+[ 186]    031E: AA                                    stosb
+[ 187]        :                                       
+[ 188]    031F:                                       terminator:
+[ 189]    031F: B4 01                                 mov ah,1
+[ 190]    0321: CD 21                                 int 21h
+[ 191]    0323: 3C 24                                 cmp al,'$'
+[ 192]    0325: 74 03 E9 2C 02                        jne greska
+[ 193]    032A: AA                                    stosb
+[ 194]    032B: 50 56 EB 03 0D 0A 00 BE 7F 01 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 195]    0345: 8B 2E 86 00                           mov BP,brojacR
+[ 196]    0349: BB 00 00                              mov BX,0
+[ 197]    034C:                                       delba_registracii2:
+[ 198]    034C: BF 8A 00                              lea DI,pomosnaR
+[ 199]    034F: BE 00 00                              lea SI,registracija
+[ 200]    0352: 03 F3                                 add SI,BX
+[ 201]    0354: 83 FD 00                              cmp BP,0
+[ 202]    0357: 75 03 E9 F7 00                        je krajDelba
+[ 203]        :                                       
+[ 204]    035C: B9 0C 00                              mov CX,12
+[ 205]    035F:                                       zacuvuvanjeVoPomR2:
+[ 206]    035F: A4                                    movsb
+[ 207]    0360: E2 FD                                 loop zacuvuvanjeVoPomR2
+[ 208]        :                                       
+[ 209]    0362: BE 8A 00                              lea SI,pomosnaR
+[ 210]    0365: 83 C6 05                              add SI,5d
+[ 211]    0368: B8 00 00                              mov AX,0
+[ 212]    036B: 8B 04                                 mov AX,[SI]
+[ 213]    036D: 8A C4                                 mov al,ah
+[ 214]    036F: B4 00                                 mov ah,0
+[ 215]    0371: 2D 30 00                              sub ax,48d
+[ 216]    0374: F6 26 99 00                           mul fiksna1
+[ 217]    0378: 46                                    inc SI
+[ 218]    0379: A3 A0 00                              mov pomMesecB,ax
+[ 219]        :                                       
+[ 220]    037C: B8 00 00                              mov AX,0
+[ 221]    037F: 8B 04                                 mov AX,[SI]
+[ 222]    0381: 8A C4                                 mov al,ah
+[ 223]    0383: B4 00                                 mov ah,0
+[ 224]    0385: 2D 30 00                              sub AX,48d
+[ 225]        :                                       
+[ 226]    0388: 01 06 A0 00                           add pomMesecB,ax
+[ 227]        :                                       
+[ 228]        :                                       ;dobro e
+[ 229]    038C: 46                                    inc SI
+[ 230]    038D: 46                                    inc SI
+[ 231]        :                                       
+[ 232]    038E: B8 00 00                              mov AX,0
+[ 233]    0391: 8B 04                                 mov AX,[SI]
+[ 234]    0393: 8A C4                                 mov al,ah
+[ 235]    0395: B4 00                                 mov ah,0
+[ 236]    0397: 2D 30 00                              sub AX,48d
+[ 237]    039A: F6 26 99 00                           mul fiksna1
+[ 238]    039E: 46                                    inc SI
+[ 239]    039F: A3 A2 00                              mov pomGodinaB,ax
+[ 240]        :                                       
+[ 241]    03A2: B8 00 00                              mov AX,0
+[ 242]    03A5: 8B 04                                 mov AX,[SI]
+[ 243]    03A7: 8A C4                                 mov al,ah
+[ 244]    03A9: B4 00                                 mov ah,0
+[ 245]    03AB: 2D 30 00                              sub AX,48d
+[ 246]        :                                       
+[ 247]    03AE: 01 06 A2 00                           add pomGodinaB,ax
+[ 248]        :                                       ;dobro e2
+[ 249]        :                                       
+[ 250]    03B2: BE 9A 00                              lea SI,tekovnaD
+[ 251]    03B5: B8 00 00                              mov AX,0
+[ 252]    03B8: 8B 04                                 mov AX,[SI]
+[ 253]        :                                       ;mov al,ah
+[ 254]    03BA: B4 00                                 mov ah,0
+[ 255]    03BC: 2D 30 00                              sub AX,48d
+[ 256]    03BF: F6 26 99 00                           mul fiksna1
+[ 257]    03C3: 46                                    inc SI
+[ 258]    03C4: A3 A4 00                              mov pomMesecV,ax
+[ 259]        :                                       
+[ 260]    03C7: B8 00 00                              mov AX,0
+[ 261]    03CA: 8B 04                                 mov AX,[SI]
+[ 262]        :                                       ;mov al,ah
+[ 263]    03CC: B4 00                                 mov ah,0
+[ 264]    03CE: 2D 30 00                              sub AX,48d
+[ 265]        :                                       
+[ 266]    03D1: 01 06 A4 00                           add pomMesecV,ax
+[ 267]        :                                       
+[ 268]    03D5: 46                                    inc SI
+[ 269]    03D6: 46                                    inc SI
+[ 270]        :                                       
+[ 271]    03D7: B8 00 00                              mov AX,0
+[ 272]    03DA: 8B 04                                 mov AX,[SI]
+[ 273]        :                                       ;mov al,ah
+[ 274]    03DC: B4 00                                 mov ah,0
+[ 275]    03DE: 2D 30 00                              sub AX,48d
+[ 276]    03E1: F6 26 99 00                           mul fiksna1
+[ 277]    03E5: 46                                    inc SI
+[ 278]    03E6: A3 A6 00                              mov pomGodinaV,ax
+[ 279]        :                                       
+[ 280]    03E9: B8 00 00                              mov AX,0
+[ 281]    03EC: 8B 04                                 mov AX,[SI]
+[ 282]        :                                       ;mov al,ah
+[ 283]    03EE: B4 00                                 mov ah,0
+[ 284]    03F0: 2D 30 00                              sub AX,48d
+[ 285]        :                                       
+[ 286]    03F3: 01 06 A6 00                           add pomGodinaV,ax
+[ 287]        :                                       
+[ 288]        :                                       
+[ 289]        :                                       ;FINITO
+[ 290]    03F7: C6 06 A8 00 00                        mov flagGod,0d
+[ 291]    03FC: B8 00 00                              mov ax,0
+[ 292]    03FF: A1 A6 00                              mov ax,pomGodinaV
+[ 293]    0402: 3B 06 A2 00                           cmp AX,pomGodinaB
+[ 294]    0406: 74 0E                                 je vtoraProverka
+[ 295]    0408: 48                                    dec ax
+[ 296]    0409: 3B 06 A2 00                           cmp ax,pomGodinaB
+[ 297]    040D: C6 06 A8 00 01                        mov flagGod,1d
+[ 298]    0412: 74 02                                 je vtoraProverka
+[ 299]    0414: EB 36                                 jmp skokDruga
+[ 300]        :                                       
+[ 301]    0416:                                       vtoraProverka:
+[ 302]    0416: 80 3E A8 00 00                        cmp flagGod,0d
+[ 303]    041B: 74 0E                                 je istaGod
+[ 304]        :                                       
+[ 305]    041D:                                       razlicnaGodina:
+[ 306]    041D: B8 00 00                              mov ax,0
+[ 307]    0420: A1 A4 00                              mov ax,pomMesecV
+[ 308]    0423: 3B 06 A0 00                           cmp ax,pomMesecB
+[ 309]    0427: 7E 02                                 jle istaGod
+[ 310]    0429: EB 21                                 jmp skokDruga
+[ 311]        :                                       
+[ 312]    042B:                                       istaGod:
+[ 313]    042B: BA 8A 00                              lea DX,pomosnaR
+[ 314]    042E: B4 09                                 mov ah,9d
+[ 315]    0430: CD 21                                 int 21h
+[ 316]    0432: 50 56 EB 03 0D 0A 00 BE 86 02 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 317]        :                                       
+[ 318]    044C:                                       skokDruga:
+[ 319]    044C: 83 C3 0C                              add BX,12d
+[ 320]    044F: 4D                                    dec BP
+[ 321]    0450: E9 F9 FE                              jmp delba_registracii2
+[ 322]        :                                       
+[ 323]        :                                       
+[ 324]        :                                       
+[ 325]    0453:                                       krajDelba:
+[ 326]        :                                       
+[ 327]    0453: 50 56 EB 03 0D 0A 00 BE A7 02 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 328]    046D: E9 87 FD                              jmp glaven
+[ 329]        :                                       
+[ 330]    0470:                                       vnesR:
+[ 331]        :                                       
+[ 332]        :                                       ;cmp ch,0d
+[ 333]        :                                       ;jne find
+[ 334]        :                                       ;cmp ch,1d
+[ 335]        :                                       ;jne find
+[ 336]    0470: BE 78 00                              lea si,tekovnaR
+[ 337]    0473: B1 0C                                 mov cl,12
+[ 338]    0475:                                       ciklus:
+[ 339]    0475: 80 F9 00                              cmp cl,0d
+[ 340]    0478: 74 0B                                 je proverkaPrviTri
+[ 341]    047A: B4 01                                 mov ah,1
+[ 342]    047C: CD 21                                 int 21h
+[ 343]    047E: 88 04                                 mov [si],al
+[ 344]    0480: 46                                    inc si
+[ 345]    0481: FE C9                                 dec cl
+[ 346]    0483: EB F0                                 jmp ciklus
+[ 347]        :                                       
+[ 348]        :                                       
+[ 349]    0485:                                       proverkaPrviTri:
+[ 350]        :                                       
+[ 351]    0485: BE 78 00                              mov si, OFFSET tekovnaR
+[ 352]    0488: 80 3C 30                              cmp [si],48d
+[ 353]    048B: 7D 03 E9 27 02                        jl gresenFormat
+[ 354]    0490: 80 3C 39                              cmp [si], 57d
+[ 355]    0493: 7E 03 E9 1F 02                        jg gresenFormat
+[ 356]    0498: 46                                    inc si
+[ 357]    0499: 80 3C 30                              cmp [si],48d
+[ 358]    049C: 7D 03 E9 16 02                        jl gresenFormat
+[ 359]    04A1: 80 3C 39                              cmp [si], 57d
+[ 360]    04A4: 7E 03 E9 0E 02                        jg gresenFormat
+[ 361]    04A9: 46                                    inc si
+[ 362]    04AA: 80 3C 30                              cmp [si],48d
+[ 363]    04AD: 7D 03 E9 05 02                        jl gresenFormat
+[ 364]    04B2: 80 3C 39                              cmp [si], 57d
+[ 365]    04B5: 7E 03 E9 FD 01                        jg gresenFormat
+[ 366]    04BA: 46                                    inc si
+[ 367]        :                                       
+[ 368]    04BB:                                       proverkaBukvi:
+[ 369]    04BB: 80 3C 41                              cmp [si], 65d
+[ 370]    04BE: 7D 03 E9 F4 01                        jl gresenFormat
+[ 371]    04C3: 80 3C 5A                              cmp [si], 90d
+[ 372]    04C6: 7E 03 E9 EC 01                        jg gresenFormat
+[ 373]    04CB: 46                                    inc si
+[ 374]    04CC: 80 3C 41                              cmp [si], 65d
+[ 375]    04CF: 7D 03 E9 E3 01                        jl gresenFormat
+[ 376]    04D4: 80 3C 5A                              cmp [si], 90d
+[ 377]    04D7: 7E 03 E9 DB 01                        jg gresenFormat
+[ 378]    04DC: 46                                    inc si
+[ 379]        :                                       
+[ 380]        :                                       
+[ 381]    04DD:                                       proverkaRegSpace:
+[ 382]    04DD: 80 3C 20                              cmp [si], 32d
+[ 383]    04E0: 74 03 E9 D2 01                        jne gresenFormat
+[ 384]    04E5: 46                                    inc si
+[ 385]        :                                       
+[ 386]    04E6:                                       proverkaData:
+[ 387]    04E6: 80 3C 30                              cmp [si], 48d
+[ 388]    04E9: 7D 03 E9 C9 01                        jl gresenFormat
+[ 389]    04EE: 80 3C 31                              cmp [si], 49d
+[ 390]    04F1: 7E 03 E9 C1 01                        jg gresenFormat
+[ 391]    04F6: 46                                    inc si
+[ 392]    04F7: 80 3C 30                              cmp [si], 48d
+[ 393]    04FA: 7D 03 E9 B8 01                        jl gresenFormat
+[ 394]    04FF: 80 3C 39                              cmp [si], 57d
+[ 395]    0502: 7E 03 E9 B0 01                        jg gresenFormat
+[ 396]    0507: 46                                    inc si
+[ 397]    0508: 80 3C 2D                              cmp [si], 45d    ;proverka za crta
+[ 398]    050B: 74 03 E9 A7 01                        jne gresenFormat
+[ 399]    0510: 46                                    inc si
+[ 400]    0511: 80 3C 30                              cmp [si], 48d
+[ 401]    0514: 7D 03 E9 9E 01                        jl gresenFormat
+[ 402]    0519: 80 3C 39                              cmp [si], 57d
+[ 403]    051C: 7E 03 E9 96 01                        jg gresenFormat
+[ 404]    0521: 46                                    inc si
+[ 405]    0522: 80 3C 30                              cmp [si], 48d
+[ 406]    0525: 7D 03 E9 8D 01                        jl gresenFormat
+[ 407]    052A: 80 3C 39                              cmp [si], 57d
+[ 408]    052D: 7E 03 E9 85 01                        jg gresenFormat
+[ 409]    0532: 46                                    inc si
+[ 410]    0533: 80 3C 24                              cmp [si], 36d
+[ 411]    0536: 74 03 E9 7C 01                        jne gresenFormat
+[ 412]        :                                       ;je proverkaRegVoMem
+[ 413]    053B: 83 3E 88 00 00                        cmp komanda,0
+[ 414]    0540: 74 64                                 je proverkaRegVoMem
+[ 415]    0542: 83 3E 88 00 01                        cmp komanda,1
+[ 416]    0547: 75 03 E9 D6 00                        je erase
+[ 417]    054C: 83 3E 88 00 02                        cmp komanda,2
+[ 418]    0551: 75 03 E9 C9 00                        je find
+[ 419]        :                                       
+[ 420]        :                                       
+[ 421]        :                                       
+[ 422]    0556:                                       greska:
+[ 423]    0556: 50 56 EB 03 0D 0A 00 BE AA 03 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 424]    0570: 50 56 EB 1C 4E 65 20 70 6F 73 74 6F   printn "Ne postoi takva operacija"
+                69 20 74 61 6B 76 61 20 6F 70 65 72 
+                61 63 69 6A 61 0D 0A 00 BE C4 03 2E 
+                8A 04 3C 00 74 07 46 B4 0E CD 10 EB 
+                F2 5E 58                            
+[ 425]    05A3: E9 51 FC                              jmp glaven
+[ 426]        :                                       ;add your code here
+[ 427]        :                                       
+[ 428]    05A6:                                       proverkaRegVoMem:
+[ 429]    05A6: 8B 16 86 00                           mov dx,brojacR
+[ 430]    05AA: 4A                                    dec dx
+[ 431]        :                                       
+[ 432]    05AB:                                       povtoruvanjeProverka:
+[ 433]    05AB: 83 FA FF                              cmp dx,-1d
+[ 434]    05AE: 74 1A                                 je krajProverka
+[ 435]    05B0: B0 0C                                 mov al,12
+[ 436]    05B2: F6 E2                                 mul dl
+[ 437]    05B4: BE 78 00                              lea si, tekovnaR
+[ 438]    05B7: BF 00 00                              lea di, registracija
+[ 439]    05BA: 03 F8                                 add di, ax
+[ 440]        :                                       
+[ 441]    05BC: B9 06 00                              MOV CX, 6
+[ 442]    05BF: F3 A6                                 REPE CMPSB
+[ 443]    05C1: 72 04                                 JB prodolziProverka
+[ 444]    05C3: 77 02                                 JA prodolziProverka
+[ 445]        :                                       ;ako veke e dodadena registracija vo nizata
+[ 446]    05C5: EB 36                                 jmp prebrisi
+[ 447]    05C7:                                       prodolziProverka:
+[ 448]    05C7: 4A                                    dec dx
+[ 449]    05C8: EB E1                                 jmp povtoruvanjeProverka
+[ 450]        :                                       
+[ 451]    05CA:                                       krajProverka:
+[ 452]    05CA: FF 06 86 00                           inc brojacR
+[ 453]    05CE: B9 0C 00                              mov cx,12
+[ 454]    05D1: BE 78 00                              lea si,tekovnaR
+[ 455]    05D4: 8B 3E 84 00                           mov di,tekovnaA
+[ 456]        :                                       
+[ 457]    05D8:                                       kopiranje:
+[ 458]    05D8: A4                                    movsb
+[ 459]    05D9: E2 FD                                 loop kopiranje
+[ 460]        :                                       
+[ 461]    05DB: 83 06 84 00 0C                        add tekovnaA,12
+[ 462]    05E0: 50 56 EB 03 0D 0A 00 BE 34 04 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 463]    05FA: E9 FA FB                              jmp glaven
+[ 464]    05FD:                                       prebrisi:
+[ 465]    05FD: B9 06 00                              mov cx,6
+[ 466]    0600: F3 A4                                 repe movsb
+[ 467]        :                                       
+[ 468]    0602: 50 56 EB 03 0D 0A 00 BE 56 04 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 469]    061C: E9 D8 FB                              jmp glaven
+[ 470]        :                                       
+[ 471]    061F:                                       find:
+[ 472]    061F: E9 D5 FB                              jmp glaven
+[ 473]        :                                       
+[ 474]    0622:                                       erase:
+[ 475]    0622: 8B 16 86 00                           mov DX,brojacR
+[ 476]    0626: BB 00 00                              mov BX,0
+[ 477]    0629:                                       delba_registracii:
+[ 478]    0629: BF 8A 00                              lea DI,pomosnaR
+[ 479]    062C: BE 00 00                              lea SI,registracija
+[ 480]    062F: 03 F3                                 add SI,BX
+[ 481]    0631: 83 FA 00                              cmp DX,0
+[ 482]    0634: 74 64                                 je krajErase
+[ 483]        :                                       
+[ 484]    0636: B9 0C 00                              mov CX,12
+[ 485]    0639:                                       zacuvuvanjeVoPomR:
+[ 486]    0639: A4                                    movsb
+[ 487]    063A: E2 FD                                 loop zacuvuvanjeVoPomR
+[ 488]        :                                       
+[ 489]    063C: BE 78 00                              lea SI,tekovnaR
+[ 490]    063F: BF 8A 00                              lea DI,pomosnaR
+[ 491]    0642: B9 0C 00                              MOV CX, 12
+[ 492]    0645: F3 A6                                 REPE CMPSB
+[ 493]    0647: 72 4B                                 JB prodolziP
+[ 494]    0649: 77 49                                 JA prodolziP
+[ 495]        :                                       ;ako veke e najdena registracijata koja treba da se brise
+[ 496]    064B: BF 00 00                              lea DI,registracija
+[ 497]    064E: 03 FB                                 add DI,BX ;pocetok na dupkata vo memorija
+[ 498]        :                                       ;mov CX,12
+[ 499]        :                                       ;mov al,0
+[ 500]    0650: BE 00 00                              lea SI,registracija
+[ 501]    0653: 03 F3                                 add SI,BX
+[ 502]    0655: 83 C6 0C                              add SI,12d
+[ 503]    0658: A1 86 00                              mov AX,brojacR
+[ 504]    065B: F6 26 98 00                           mul fiksna
+[ 505]    065F: 83 C3 0C                              add BX,12d
+[ 506]    0662: 2B C3                                 sub AX,BX
+[ 507]    0664: 3D 00 00                              cmp AX,0d
+[ 508]    0667: 74 04                                 je da
+[ 509]    0669: 8B C8                                 mov CX,AX
+[ 510]    066B: EB 03                                 jmp k
+[ 511]    066D:                                       da:
+[ 512]    066D: B9 0C 00                              mov cx,12d
+[ 513]    0670:                                       k:
+[ 514]    0670:                                       shiftanjePrazno:
+[ 515]    0670: A4                                    movsb
+[ 516]    0671: E2 FD                                 loop shiftanjePrazno
+[ 517]        :                                       
+[ 518]    0673:                                       skok:
+[ 519]    0673: A1 86 00                              mov AX,brojacR
+[ 520]    0676: 48                                    dec AX
+[ 521]    0677: F6 26 98 00                           mul fiksna
+[ 522]        :                                       
+[ 523]    067B: BF 00 00                              lea DI,registracija
+[ 524]    067E: 03 F8                                 add DI,AX
+[ 525]    0680: B9 0C 00                              mov CX,12d
+[ 526]        :                                       
+[ 527]    0683: B8 00 00                              mov AX,0
+[ 528]    0686:                                       polnenjeNuli:
+[ 529]    0686: AA                                    stosb
+[ 530]    0687: E2 FD                                 loop polnenjeNuli
+[ 531]    0689: FF 0E 86 00                           dec brojacR
+[ 532]    068D: 83 2E 84 00 0C                        sub tekovnaA,12d
+[ 533]    0692: EB 06                                 jmp krajErase
+[ 534]        :                                       ;polnenjeNuli:
+[ 535]        :                                       ;stosb
+[ 536]        :                                       ;loop polnenjeNuli
+[ 537]        :                                       ;jmp krajErase
+[ 538]    0694:                                       prodolziP:
+[ 539]    0694: 4A                                    dec DX
+[ 540]    0695: 83 C3 0C                              add BX,12
+[ 541]    0698: EB 8F                                 jmp delba_registracii
+[ 542]        :                                       
+[ 543]        :                                       
+[ 544]    069A:                                       krajErase:
+[ 545]    069A: 50 56 EB 03 0D 0A 00 BE EE 04 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 546]    06B4: E9 40 FB                              jmp glaven
+[ 547]        :                                       
+[ 548]    06B7:                                       gresenFormat:
+[ 549]    06B7: 50 56 EB 03 0D 0A 00 BE 0B 05 2E 8A   printn ""
+                04 3C 00 74 07 46 B4 0E CD 10 EB F2 
+                5E 58                               
+[ 550]    06D1: 50 56 EB 10 47 72 65 73 65 6E 20 66   printn "Gresen format"
+                6F 72 6D 61 74 0D 0A 00 BE 25 05 2E 
+                8A 04 3C 00 74 07 46 B4 0E CD 10 EB 
+                F2 5E 58                            
+[ 551]    06F8: E9 FC FA                              jmp glaven
+[ 552]        :                                       
+[ 553]    06FB:                                       kraj:
+[ 554]    06FB: B8 00 4C                              mov ax, 4c00h
+[ 555]    06FE: CD 21                                 int 21h
+[ 556]        :                                       
+[ 557]        :                                       ends
+[ 558]        :                                       
+[ 559]        :                                       end start
+[ 560]        :                                       
+[ 561]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 00      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 05      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 0B      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 7E      -   check sum (l.byte)
+0013: 64      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 1B      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 01      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 1B      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
