@@ -296,20 +296,27 @@ dec ax
 cmp ax,pomGodinaB
 mov flagGod,1d
 je vtoraProverka
-jmp skokDruga
+jmp pecatenje
 
 vtoraProverka:
 cmp flagGod,0d
-je istaGod
+je istaGodina
 
 razlicnaGodina:
 mov ax,0
 mov ax,pomMesecV
 cmp ax,pomMesecB
-jle istaGod
-jmp skokDruga
+jle skokDruga
+jmp pecatenje
 
-istaGod:
+istaGodina:
+mov ax,0
+mov ax,pomMesecV
+cmp ax,pomMesecB
+jge skokDruga
+jmp pecatenje
+
+pecatenje:
 lea DX,pomosnaR
 mov ah,9d
 int 21h
